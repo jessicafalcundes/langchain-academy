@@ -3,9 +3,18 @@ from langchain_core.messages import HumanMessage, SystemMessage, RemoveMessage
 from langgraph.graph import MessagesState
 from langgraph.graph import StateGraph, START, END
 
-# We will use this model for both the conversation and the summarization
-from langchain_openai import ChatOpenAI
-model = ChatOpenAI(model="gpt-4o", temperature=0) 
+# IMPORTANTE: Use AzureChatOpenAI e importe 'os'
+from langchain_openai import AzureChatOpenAI
+import os
+
+# 1. Defina o modelo LLM do Azure
+model = AzureChatOpenAI(
+    openai_api_version=os.getenv('OPENAI_API_VERSION'),
+    azure_endpoint=os.getenv('ENDPOINT'),
+    azure_deployment=os.getenv('MODEL_DEPLOYMENT'),                            
+    model=os.getenv('MODEL_NAME'), 
+    temperature=0
+) 
 
 # State class to store messages and summary
 class State(MessagesState):
