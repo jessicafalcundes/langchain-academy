@@ -4,7 +4,8 @@ from typing_extensions import TypedDict
 
 from pydantic import BaseModel
 
-from langchain_openai import ChatOpenAI 
+from langchain_openai import AzureChatOpenAI
+import os
 
 from langgraph.constants import Send
 from langgraph.graph import END, StateGraph, START
@@ -15,7 +16,13 @@ joke_prompt = """Generate a joke about {subject}"""
 best_joke_prompt = """Below are a bunch of jokes about {topic}. Select the best one! Return the ID of the best one, starting 0 as the ID for the first joke. Jokes: \n\n  {jokes}"""
 
 # LLM
-model = ChatOpenAI(model="gpt-4o", temperature=0) 
+llm = AzureChatOpenAI(
+    openai_api_version=os.getenv('OPENAI_API_VERSION'),
+    azure_endpoint=os.getenv('ENDPOINT'),
+    azure_deployment=os.getenv('MODEL_DEPLOYMENT'),
+    model=os.getenv('MODEL_NAME'),
+    temperature=0
+)
 
 # Define the state
 class Subjects(BaseModel):
